@@ -67,7 +67,7 @@ void render(WINDOW *win, Entity *player)
 {
     wclear(win);
     box(win, 0, 0);
-    mvwprintw(win, LENGTH - 1, 1, "| %d/%d | Selected block: [ %c ] | Dev: Anthony Warner |", player->z, HEIGHT, blocks[selectedBlock]);
+    mvwprintw(win, LENGTH - 1, 1, "| %d/%d | Selected block: [ %c ] | Dev: semibrackets |", player->z, HEIGHT, blocks[selectedBlock]);
     mvwprintw(win, 0, 1, "| the TERMICRAFT project | ver: 0.0.0-alpha-dev |");
 
     for (int y = 1; y < LENGTH - 1; y++)
@@ -151,6 +151,32 @@ void placeBlock(Entity *player)
             break;
         case 'd': // build east
             if (player->x < WIDTH - 2) room[player->z][player->y][player->x + 1] = blocks[selectedBlock];
+            break;
+        default: break;
+    }
+}
+
+void movePlayer(Entity *player, char direction)
+{
+    switch (direction)
+    {
+        case 'w':
+            if (player->y - 1 != 0 && room[player->z][player->y - 1][player->x] != '#' && room[player->z][player->y - 1][player->x] != '%') player->y--; // move up
+            break;
+        case 'a':
+            if (player->x - 1 != 0 && room[player->z][player->y][player->x - 1] != '#' && room[player->z][player->y][player->x - 1] != '%') player->x--; // move left
+            break;
+        case 's':
+            if (player->y + 1 != LENGTH - 1 && room[player->z][player->y + 1][player->x] != '#' && room[player->z][player->y + 1][player->x] != '%') player->y++; // move down
+            break;
+        case 'd':
+            if (player->x + 1 != WIDTH - 1 && room[player->z][player->y][player->x + 1] != '#' && room[player->z][player->y][player->x + 1] != '%') player->x++; // move right
+            break;
+        case 'W':
+            if (player->z > 0) player->z--;
+            break;
+        case 'S':
+            if (player->z < HEIGHT - 1) player->z++;
             break;
         default: break;
     }
