@@ -18,6 +18,8 @@ Air [ ],
 Grass [.], 
 Dirt [%],  
 Stone [#],
+Door 1 [|],
+Door 2 [-]
 
 Note that ncurses doesnt have a brown color for dirt, so i used yellow as a substitude. This will be changed later on.
 
