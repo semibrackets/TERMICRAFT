@@ -14,8 +14,8 @@ ARROW UP: move selected block up
 ARROW DOWN: move selected block down
 
 BLOCKS:
-Air [ ], 
-Grass [.], 
+Air [ ],
+Grass [.],
 Dirt [%],  
 Stone [#],
 Door 1 [|],
