@@ -3,10 +3,11 @@
 version: 0.0.0-alpha-dev
 
 TERMICRAFT is a sandbox game that takes place in the terminal
-You the player '@' can move around freely with wasd and can build with the period and comma keys
+You the player '@' can move around freely with wasdqezc and can build with the period and comma keys
 
 CONTROLS:
-WASD: move around
+WASD: move up, left, down, and right.
+QEZC: move north east, north west, south east, and south west.
 COMMA: Mine blocks
 PERIOD: Place selected block
 
