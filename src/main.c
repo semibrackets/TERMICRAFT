@@ -116,20 +116,48 @@ void mineBlock(Entity *player)
         case 'w': // mine north
             if (player->y > 1) room[player->z][player->y - 1][player->x] = blocks[0];
             break;
-        case 'a': // mine west
+        case 'a': // mine east
             if (player->x > 1) room[player->z][player->y][player->x - 1] = blocks[0];
             break;
-        case 's': // mine south
+        case 'x': // mine south
             if (player->y < LENGTH - 2) room[player->z][player->y + 1][player->x] = blocks[0];
             break;
-        case 'd': // mine east
+        case 'd': // mine west
             if (player->x < WIDTH - 2) room[player->z][player->y][player->x + 1] = blocks[0];
             break;
-        case 'W': // mine above NOTE: temporary
+        case 'q': // mine northeast
+            if (player->y > 1)
+            {
+                if (player->x > 1) room[player->z][player->y - 1][player->x - 1] = blocks[0];
+            }
+            break;
+        case 'e': // mine northwest
+            if (player->y > 1)
+            {
+                if (player->x < WIDTH - 2) room[player->z][player->y - 1][player->x + 1] = blocks[0];
+                break;
+            }
+            break;
+        case 'z': // mine southeast
+            if (player->y < LENGTH - 2)
+            {
+                if (player->x > 1) room[player->z][player->y + 1][player->x - 1] = blocks[0];
+            }
+            break;
+        case 'c': // mine southwest
+            if (player->y < LENGTH - 2)
+            {
+                if (player->x < WIDTH - 2) room[player->z][player->y + 1][player->x + 1] = blocks[0];
+            }
+            break;
+        case 's': // mine at player pos
+            if (player->z < HEIGHT - 1) room[player->z][player->y][player->x] = blocks[0];
+            break;
+        case 'W': // mine above NOTE: temporary (probably)
             if (player->z > 0) room[player->z - 1][player->y][player->x] = blocks[0];
             break;
-        case 'E': // mine below NOTE: temporary 
-            if (player->z < HEIGHT - 1) room[player->z][player->y][player->x] = blocks[0];
+        case 'X': // mine below NOTE: temporary (probably)
+            if (player->z < HEIGHT - 1) room[player->z + 1][player->y][player->x] = blocks[0];
             break;
         default: break;
     }
@@ -146,11 +174,44 @@ void placeBlock(Entity *player)
         case 'a': // build west
             if (player->x > 1) room[player->z][player->y][player->x - 1] = blocks[selectedBlock];
             break;
-        case 's': // build south
+        case 'x': // build south
             if (player->y < LENGTH - 2) room[player->z][player->y + 1][player->x] = blocks[selectedBlock];
             break;
         case 'd': // build east
             if (player->x < WIDTH - 2) room[player->z][player->y][player->x + 1] = blocks[selectedBlock];
+            break;
+        case 'q': // build northeast
+            if (player->y > 1)
+            {
+                if (player->x > 1) room[player->z][player->y - 1][player->x - 1] = blocks[selectedBlock];
+            }
+            break;
+        case 'e': // build northwest
+            if (player->y > 1)
+            {
+                if (player->x < WIDTH - 2) room[player->z][player->y - 1][player->x + 1] = blocks[selectedBlock];
+            }
+            break;
+        case 'z': // build southeast
+            if (player->y < LENGTH - 2)
+            {
+                if (player->x > 1) room[player->z][player->y + 1][player->x - 1] = blocks[selectedBlock];
+            }
+            break;
+        case 'c': // build southwest
+            if (player->y < LENGTH - 2)
+            {
+                if (player->x < WIDTH - 2) room[player->z][player->y + 1][player->x + 1] = blocks[selectedBlock];
+            }
+            break;
+        case 's': // build at players pos
+            if (player->z < HEIGHT - 1) room[player->z][player->y][player->x] = blocks[selectedBlock];
+            break;
+        case 'W': // build above
+            if (player->z > 0) room[player->z - 1][player->y][player->x] = blocks[selectedBlock];
+            break;
+        case 'X':
+            if (player->z < HEIGHT - 1) room[player->z + 1][player->y][player->x] = blocks[selectedBlock];
             break;
         default: break;
     }
@@ -184,9 +245,11 @@ void movePlayer(Entity *player, char direction)
 
 void getInput(Entity *player)
 {
+    if (room[player->z][player->y][player->x] == ' ' && room[player->z + 1][player->y][player->x] == ' ') player->z++;
+
     int ch = getch();
 
-    if (ch == 'q')
+    if (ch == '`')
     {
         running = false;
         return;
