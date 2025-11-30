@@ -106,8 +106,6 @@ void render(WINDOW *win, Entity *player)
     }
 }
 
-
-
 void mineBlock(Entity *player)
 {
     char direction = getch();
@@ -119,44 +117,31 @@ void mineBlock(Entity *player)
         case 'a': // mine east
             if (player->x > 1) room[player->z][player->y][player->x - 1] = blocks[0];
             break;
-        case 'x': // mine south
+        case 's': // mine south
             if (player->y < LENGTH - 2) room[player->z][player->y + 1][player->x] = blocks[0];
             break;
         case 'd': // mine west
             if (player->x < WIDTH - 2) room[player->z][player->y][player->x + 1] = blocks[0];
             break;
         case 'q': // mine northeast
-            if (player->y > 1)
-            {
-                if (player->x > 1) room[player->z][player->y - 1][player->x - 1] = blocks[0];
-            }
+            if (player->y > 1 && player->x > 1) room[player->z][player->y - 1][player->x - 1] = blocks[0];
             break;
         case 'e': // mine northwest
-            if (player->y > 1)
-            {
-                if (player->x < WIDTH - 2) room[player->z][player->y - 1][player->x + 1] = blocks[0];
-                break;
-            }
+            if (player->y > 1 && player->x < WIDTH - 2) room[player->z][player->y - 1][player->x + 1] = blocks[0];
             break;
         case 'z': // mine southeast
-            if (player->y < LENGTH - 2)
-            {
-                if (player->x > 1) room[player->z][player->y + 1][player->x - 1] = blocks[0];
-            }
+            if (player->y < LENGTH - 2 && player->x > 1) room[player->z][player->y + 1][player->x - 1] = blocks[0];
             break;
         case 'c': // mine southwest
-            if (player->y < LENGTH - 2)
-            {
-                if (player->x < WIDTH - 2) room[player->z][player->y + 1][player->x + 1] = blocks[0];
-            }
+            if (player->y < LENGTH - 2 && player->x < WIDTH - 2) room[player->z][player->y + 1][player->x + 1] = blocks[0];
             break;
-        case 's': // mine at player pos
+        case ',': // mine at player pos
             if (player->z < HEIGHT - 1) room[player->z][player->y][player->x] = blocks[0];
             break;
         case 'W': // mine above NOTE: temporary (probably)
             if (player->z > 0) room[player->z - 1][player->y][player->x] = blocks[0];
             break;
-        case 'X': // mine below NOTE: temporary (probably)
+        case 'S': // mine below NOTE: temporary (probably)
             if (player->z < HEIGHT - 1) room[player->z + 1][player->y][player->x] = blocks[0];
             break;
         default: break;
@@ -174,7 +159,7 @@ void placeBlock(Entity *player)
         case 'a': // build west
             if (player->x > 1) room[player->z][player->y][player->x - 1] = blocks[selectedBlock];
             break;
-        case 'x': // build south
+        case 's': // build south
             if (player->y < LENGTH - 2) room[player->z][player->y + 1][player->x] = blocks[selectedBlock];
             break;
         case 'd': // build east
@@ -204,13 +189,13 @@ void placeBlock(Entity *player)
                 if (player->x < WIDTH - 2) room[player->z][player->y + 1][player->x + 1] = blocks[selectedBlock];
             }
             break;
-        case 's': // build at players pos
+        case '.': // build at players pos
             if (player->z < HEIGHT - 1) room[player->z][player->y][player->x] = blocks[selectedBlock];
             break;
         case 'W': // build above
             if (player->z > 0) room[player->z - 1][player->y][player->x] = blocks[selectedBlock];
             break;
-        case 'X':
+        case 'S':
             if (player->z < HEIGHT - 1) room[player->z + 1][player->y][player->x] = blocks[selectedBlock];
             break;
         default: break;
@@ -221,17 +206,45 @@ void movePlayer(Entity *player, char direction)
 {
     switch (direction)
     {
-        case 'w':
+        case 'w': // move north
             if (player->y - 1 != 0 && room[player->z][player->y - 1][player->x] != '#' && room[player->z][player->y - 1][player->x] != '%') player->y--; // move up
             break;
-        case 'a':
+        case 'a': // move east
             if (player->x - 1 != 0 && room[player->z][player->y][player->x - 1] != '#' && room[player->z][player->y][player->x - 1] != '%') player->x--; // move left
             break;
-        case 's':
+        case 's': // move south
             if (player->y + 1 != LENGTH - 1 && room[player->z][player->y + 1][player->x] != '#' && room[player->z][player->y + 1][player->x] != '%') player->y++; // move down
             break;
-        case 'd':
+        case 'd': // move west
             if (player->x + 1 != WIDTH - 1 && room[player->z][player->y][player->x + 1] != '#' && room[player->z][player->y][player->x + 1] != '%') player->x++; // move right
+            break;
+        case 'q': // move north eats
+            if (player->y - 1 != 0 && player->x - 1 != 0 && room[player->z][player->y - 1][player->x - 1] != '#' && room[player->z][player->y - 1][player->x - 1] != '%')
+            {
+                player->y--;
+                player->x--;
+            }   
+            break;
+        case 'e': // move north west
+            if (player->y - 1 != 0 && player->x + 1 != WIDTH - 1 && room[player->z][player->y - 1][player->x + 1] != '#' && room[player->z][player->y - 1][player->x + 1] != '%')
+            {
+                player->y--;
+                player->x++;
+            }
+            break;
+        case 'z': // move south east
+            if (player->y + 1 != LENGTH - 1 && player->x - 1 != 0 && room[player->z][player->y + 1][player->x - 1] != '#' && room[player->z][player->y + 1][player->x - 1] != '%')
+            {
+                player->y++;
+                player->x--;
+            }
+            break;
+        case 'c': // move south west
+            if (player->y < LENGTH - 2 && player->x < WIDTH - 2 && room[player->z][player->y + 1][player->x] != '#' && room[player->z][player->y + 1][player->x] != '%')
+            {
+                player->y++;
+                player->x++;
+            }
             break;
         case 'W':
             if (player->z > 0) player->z--;
@@ -249,13 +262,13 @@ void getInput(Entity *player)
 
     int ch = getch();
 
-    if (ch == '`')
+    if (ch == '\x1b') // ESC
     {
         running = false;
         return;
     }
-
-    if (ch == 'w' || ch == 'a' || ch == 's' || ch == 'd' || ch == 'W' || ch == 'S')
+    
+    if (ch == 'q' || ch == 'w' || ch == 'e' || ch == 'a' || ch == 'd' || ch == 'z' || ch == 's' || ch == 'c' || ch == 'W' || ch == 'S')
     {
         movePlayer(player, ch);
         return;
@@ -276,9 +289,6 @@ void getInput(Entity *player)
             case '.':
                 placeBlock(player);
                 break;
-            case 'q':
-                running = false;
-                break;
             default: break;
         }
     }
@@ -287,8 +297,8 @@ void getInput(Entity *player)
 int main(int argc, char *argv[])
 {
     Entity player;
-    player.x = 1;
-    player.y = 1;
+    player.x = WIDTH / 2;
+    player.y = HEIGHT / 2;
     player.z = 0;
     player.icon = '@';
 
