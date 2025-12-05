@@ -2,6 +2,16 @@
 
 #include "render.h"
 
+void renderEnemy(WINDOW *game, Entity *e)
+{
+  mvwaddch(game, e->y, e->x, e->icon);
+}
+
+void renderPlayer(WINDOW *game, Entity *p)
+{
+  mvwaddch(game, p->y, p->x, p->icon);
+}
+
 void render(WINDOW *game, WINDOW *name, WINDOW *stats, WINDOW *log, WINDOW *inventory, WINDOW *day, Entity *player) 
 {
   wclear(game);
@@ -10,6 +20,7 @@ void render(WINDOW *game, WINDOW *name, WINDOW *stats, WINDOW *log, WINDOW *inve
   wclear(log);
   wclear(inventory);
   wclear(day);
+  
   box(game, 0, 0);
   box(name, 0, 0); 
   box(stats, 0, 0);
@@ -23,7 +34,7 @@ void render(WINDOW *game, WINDOW *name, WINDOW *stats, WINDOW *log, WINDOW *inve
     {
       if (y == player->y && x == player->x && player->z >= 0 && player->z < gameHEIGHT) 
       {
-        mvwaddch(game, y, x, player->icon);
+        renderPlayer(game, player);
       } 
       else 
       {
@@ -55,10 +66,11 @@ void render(WINDOW *game, WINDOW *name, WINDOW *stats, WINDOW *log, WINDOW *inve
   
   mvwprintw(name, 1, 1, "Hello %s!", player->name); // name
 
-  for (int i = 1; i < player->health + 1; i++)
-  {
-    mvwaddch(stats, 2, i, "0"); // Working on this, doesnt show anthing in stats window????
-  }
+  mvwprintw(stats, 1, 1, "HP: %d", player->health);
+  mvwprintw(stats, 2, 1, "DMG: %d", player->damage);
+  mvwprintw(stats, 3, 1, "DEF: %d", player->defence);
+  mvwprintw(stats, 4, 1, "DODGE: %.2f", player->dodgeChance);
+  mvwprintw(stats, 5, 1, "XYZ: %d, %d, %d", player->x, player->y, player->z);
 
   switch (selectedBlock) // inventory
   {

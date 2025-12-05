@@ -7,10 +7,13 @@
    add saving and loading, with overwriting
 
    add line of sight, player can only see so far. If the player is in a room the player can completly see the room unless the room is really big or something 
+
+   fix bug where player cant pass diagonally
+   fix bug where player cant go past the / in the inventory
 */
 
 char room[gameHEIGHT][gameLENGTH][gameWIDTH];
-const char blocks[] = {'.', ',', '%', '#', '|', '-', '\\', '/', '$', '^', '&', '*'};
+const char blocks[] = {'.', ',', '%', '#', '|', '-', '\\', '/', '^', '&', '*'};
 int selectedBlock = 0;
 bool running = true;
 
@@ -18,13 +21,9 @@ int main(int argc, char *argv[])
 {
   srand(time(NULL));
   
-  Entity player;
-  player.x = gameWIDTH / 2;
-  player.y = gameLENGTH / 2;
-  player.z = 0;
-  player.icon = '@';
-  player.name = "{brackets}";
-
+  Entity *player = constructEntity(0, 1, 1, 100, 10, 10, 0.5, '@', "Player");
+  Entity *goblin = constructEntity(0, 5, 5, 100, 10, 10, 0.5, 'G', "Goblin");
+  
   initscr();
 
   if (!has_colors()) 
@@ -74,10 +73,13 @@ int main(int argc, char *argv[])
     wrefresh(log);
     wrefresh(inventory);
     wrefresh(day);
-    getInput(&player);
-    render(game, name, stats, log, inventory, day, &player);
+    getInput(player);
+    render(game, name, stats, log, inventory, day, player);
   }
 
+  deconstructEntity(player);
+  deconstructEntity(goblin);
+  
   endwin();
   return 0;
 }
